@@ -65,21 +65,37 @@ code {
     border-radius: 3px;
     border: 1px solid #ebebeb;
 }
-button#ihavecookiesBtn {
-    margin-left: 0px !important;
+button#ihavecookiesBtn,
+button#showAsModal{
+    border: none;
+    background: var(--red);
+    color: white;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 15px;
+    padding: 7px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.3s ease-in;
 }
 /* Cookie Dialog */
 #gdpr-cookie-message {
-    position: fixed;
-    right: 30px;
-    bottom: 30px;
     max-width: 375px;
     background-color: var(--purple);
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 6px 6px rgba(0,0,0,0.25);
+    font-family: system-ui, sans-serif;
+}
+#gdpr-cookie-message.gdpr-cookie-bottom-right {
+    position: fixed;
+    right: 30px;
+    bottom: 30px;
     margin-left: 30px;
-    font-family: system-ui;
+}
+#gdpr-cookie-message.gdpr-cookie-modal {
+    margin: 1rem auto;
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
 }
 #gdpr-cookie-message h4 {
     color: var(--red);
@@ -121,8 +137,7 @@ button#ihavecookiesBtn {
     border-bottom-color: var(--red);
     transition: all 0.3s ease-in;
 }
-#gdpr-cookie-message button,
-button#ihavecookiesBtn {
+#gdpr-cookie-message button {
     border: none;
     background: var(--red);
     color: white;
@@ -150,4 +165,15 @@ button#gdpr-cookie-advanced {
     float: none;
     margin-top: 0;
     margin-right: 5px;
+}
+#gdpr-cookie-message-overlay {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 2;
 }

@@ -34,6 +34,10 @@
         $('#ihavecookiesBtn').on('click', function(){
             $('body').ihavecookies(options, 'reinit');
         });
+        $('#showAsModal').on('click', function(){
+            options['showAsModal'] = true;
+            $('body').ihavecookies(options);
+        });
     });
 
     </script>
@@ -47,6 +51,8 @@
         <p>If you don't see it then you've probably already accepted it. Click the button below to reopen it.</p>
 
         <p><button id="ihavecookiesBtn">Open Settings</button></p>
+
+        <p><button id="showAsModal">Show as modal</button></p>
 
         <h3>Checkboxes</h3>
 
