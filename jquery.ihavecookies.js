@@ -64,11 +64,11 @@
         }, options);
 
         var myCookie = getCookie('cookieControl');
-        var myCookiePrefs = getCookie('cookieControlPrefs');
-        if (!myCookie || !myCookiePrefs || event == 'reinit') {
+        if (!myCookie || event == 'reinit') {
             // Remove all instances of the cookie message so it's not duplicated
             $('#gdpr-cookie-message').remove();
-
+            $('#gdpr-cookie-message-bg').remove();
+            
             // Set the 'necessary' cookie type checkbox which can not be unchecked
             var cookieTypes =
                 '<li>' +
@@ -77,7 +77,6 @@
                 '</li>';
 
             // Generate list of cookie type checkboxes
-            const preferences = JSON.parse(myCookiePrefs);
             $.each(settings.cookieTypes, function(index, field) {
                 if (field.type !== '' && field.value !== '') {
                     var cookieTypeDescription = '';
@@ -94,11 +93,12 @@
 
             // Display cookie message on page
             const cookieMessage =
+                '<div id="gdpr-cookie-message-bg"></div>' +
                 '<div id="gdpr-cookie-message">' +
-                    '<h4>' + settings.title + '</h4>' +
+                    '<p class="gdpr-cookie-message-title">' + settings.title + '</h4>' +
                     '<p>' + settings.message + ' <a href="' + settings.link + '">' + settings.moreInfoLabel + '</a></p>' +
                     '<div id="gdpr-cookie-types" style="display:none;">' +
-                        '<h5>' + settings.cookieTypesTitle + '</h5>' +
+                        '<p class="gdpr-cookie-message-cookie-types">' + settings.cookieTypesTitle + '</h5>' +
                         '<ul>' + cookieTypes + '</ul>' +
                     '</div>' +
                     '<p>' +
@@ -113,9 +113,6 @@
                     // and re-check all previously selected options.
                     if (event == 'reinit') {
                         $('#gdpr-cookie-advanced').trigger('click');
-                        $.each(preferences, function(index, field) {
-                            $('input#gdpr-cookietype-' + field).prop('checked', true);
-                        });
                     }
                 });
             }, settings.delay);
@@ -131,11 +128,9 @@
                 $('input[name="gdpr[]"][data-auto="on"]').prop('checked', true);
 
                 // Save users cookie preferences (in a cookie!)
-                let prefs = [];
-                $.each($('input[name="gdpr[]"]').serializeArray(), function(i, field){
-                    prefs.push(field.value);
+                $.each($('input[name="gdpr[]"]'), function(i, field){
+                    setCookie(field.value, $(field).prop("checked"), settings.extend);
                 });
-                setCookie('cookieControlPrefs', encodeURIComponent(JSON.stringify(prefs)), settings.expires);
 
                 // Run callback function
                 settings.onAccept.call(this);
@@ -146,7 +141,10 @@
                 // Uncheck all checkboxes except for the disabled 'necessary'
                 // one and set 'data-auto' to OFF for all. The user can now
                 // select the cookies they want to accept.
-                $('input[name="gdpr[]"]:not(:disabled)').attr('data-auto', 'off').prop('checked', false);
+                //$('input[name="gdpr[]"]:not(:disabled)').attr('data-auto', 'off').prop('checked', false);
+                $.each(settings.cookieTypes, function(index, field) {
+                    $('input#gdpr-cookietype-' + field.value).prop('checked', getCookie(field.value) == "true");
+                });
                 $('#gdpr-cookie-types').slideDown('fast', function(){
                     $('#gdpr-cookie-advanced').prop('disabled', true);
                 });
@@ -199,6 +197,9 @@
         setCookie('cookieControl', value, expiryDays);
         $('#gdpr-cookie-message').fadeOut('fast', function() {
             $(this).remove();
+            $('#gdpr-cookie-message-bg').fadeOut('fast', function() {
+                $(this).remove();
+            });
         });
     };
 
