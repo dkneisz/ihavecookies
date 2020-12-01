@@ -139,10 +139,11 @@
                     // Uncheck all checkboxes except for the disabled 'necessary'
                     // one and set 'data-auto' to OFF for all. The user can now
                     // select the cookies they want to accept.
+                    $('input[name="gdpr[]"]:not(:disabled)').attr('data-auto', 'off');
                     $.each(settings.cookieTypes, function(index, field) {
                         $('input#gdpr-cookietype-' + field.value).prop('checked', getCookie(field.value) == "true");
                     });
-                        $('#gdpr-cookie-types').slideDown('fast', function(){
+                    $('#gdpr-cookie-types').slideDown('fast', function(){
                         $('#gdpr-cookie-advanced').hide();
                         $('#gdpr-cookie-accept').html(settings.advancedSaveBtnLabel);
                     });
