@@ -129,7 +129,7 @@
 
                     // Save users cookie preferences (in a cookie!)
                     $.each($('input[name="gdpr[]"]'), function(i, field){
-                        setCookie(field.value, $(field).prop("checked"), settings.extend);
+                        setCookie(field.value, $(field).prop("checked"), settings.expires);
                     });
 
                     settings.onAccept.call(this);
@@ -192,12 +192,8 @@
         if (control === false) {
             return false;
         }
-        let preferences = getCookie('cookieControlPrefs');
-        preferences = JSON.parse(preferences);
-        if (preferences === false || preferences.indexOf(cookieTypeValue) === -1) {
-            return false;
-        }
-        return true;
+        let preference = getCookie(cookieTypeValue);
+        return preference == "true" ? true : false;
     };
 
     /*
