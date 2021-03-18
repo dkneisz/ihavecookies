@@ -97,8 +97,8 @@
                         '<ul>' + cookieTypes + '</ul>' +
                     '</div>' +
                     '<p class="gdpr-cookie-buttons">' +
-                        '<button id="gdpr-cookie-accept" type="button">' + settings.acceptBtnLabel + '</button>' +
                         '<button id="gdpr-cookie-advanced" type="button">' + settings.advancedBtnLabel + '</button>' +
+                        '<button id="gdpr-cookie-accept" type="button">' + settings.acceptBtnLabel + '</button>' +
                     '</p>' +
                 '</div>';
             setTimeout(function(){
@@ -146,8 +146,14 @@
                     $('#gdpr-cookie-types').slideDown('fast', function(){
                         $('#gdpr-cookie-advanced').hide();
                         $('#gdpr-cookie-accept').html(settings.advancedSaveBtnLabel);
+                        $('.gdpr-cookie-buttons').append('<button id="gdpr-cookie-all" type="button">' + settings.acceptBtnLabel + '</button>');
+                        $('#gdpr-cookie-all').on('click', function(){
+                            $('input[name="gdpr[]"]:not(:disabled)').attr('data-auto', 'on');
+                            $('#gdpr-cookie-accept').trigger("click");
+                        });
                     });
                 });
+
             }, settings.delay);
 
         } else {
@@ -207,30 +213,19 @@
     | Sets cookie with 'name' and value of 'value' for 'expiry_days'.
     */
     var setCookie = function(name, value, expiry_days) {
-        const d = new Date();
-        d.setTime(d.getTime() + (expiry_days*24*60*60*1000));
-        const expires = "expires=" + d.toUTCString();
-        document.cookie = name + "=" + value + ";" + expires + ";path=/";
+        Cookies.set(name, value, { expires: expiry_days, path: '/'});
         return getCookie(name);
     };
 
     /*
     | Gets cookie called 'name'.
     */
-    var getCookie = function(name) {
-        const cookie_name = name + "=";
-        const decodedCookie = decodeURIComponent(document.cookie);
-        const ca = decodedCookie.split(';');
-        for (let i = 0; i < ca.length; i++) {
-            let c = ca[i];
-            while (c.charAt(0) == ' ') {
-                c = c.substring(1);
-            }
-            if (c.indexOf(cookie_name) === 0) {
-                return c.substring(cookie_name.length, c.length);
-            }
-        }
-        return false;
+    var getCookie = function (name) {
+        let cookie = Cookies.get(name);
+        if (cookie == undefined)
+            return false;
+
+        return cookie;
     };
 
 }(jQuery));
